@@ -14,3 +14,5 @@ spec:
           cpu: 500m
           memory: "128M"
 
+
+# resource quota can be granular and put up limit on specific resource types like requests and limits separately.

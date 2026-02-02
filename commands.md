@@ -25,7 +25,6 @@ Kubernetes provides scheduling, self-healing, rolling updates, service discovery
 
 ## Diagram: kubectl -> API Server -> etcd
 
-Mermaid (if your Markdown renderer supports it):
 
 ```mermaid
 flowchart LR
@@ -77,6 +76,65 @@ kubectl talks to the API server over HTTPS. The API server persists cluster stat
   - Requires careful backups and secure TLS configuration; losing etcd or having corrupted data can render the cluster unusable.
   - Typically run on control-plane nodes (often as a small cluster of 3 or 5 members for HA).
 
+## Kubelet — short explanation
+
+- The kubelet is the primary "node agent" that runs on every worker node.
+- Responsibilities:
+  - Registers the node with the API server and reports node status.
+  - Watches the API server for PodSpecs assigned to its node and ensures the containers described in those PodSpecs are running via the container runtime (CRI).
+  - Reports pod and container status back to the API server and serves pod-level logs/exec requests.
+  - Exposes a local HTTPS endpoint (default port 10250) used by the control plane for node-level operations and status checks.
+  - Enforces resource limits and interacts with cgroups on the node.
+
+## Diagram: kubectl -> control plane -> worker node
+
+
+```mermaid
+flowchart LR
+  subgraph User
+    K["kubectl / Clients"]
+  end
+
+  subgraph ControlPlane["Control Plane"]
+    APIS["API Server"]
+    SCHED["Scheduler"]
+    CM["Controller Manager"]
+  end
+
+  subgraph Worker["Worker Node"]
+    KLET["kubelet"]
+    CRI["container runtime"]
+    PODS["Pod(s)"]
+  end
+
+  K -->|HTTPS 6443| APIS
+  SCHED -->|write schedule via API| APIS
+  CM -->|manage controllers via API| APIS
+  APIS -->|watch podspecs| KLET
+  KLET -->|manage containers| CRI
+  KLET -->|report status| APIS
+
+  style ControlPlane fill:#f9f,stroke:#333,stroke-width:1px
+  style Worker fill:#dfd,stroke:#333,stroke-width:1px
+  style User fill:#bbf,stroke:#333,stroke-width:1px
+```
+
+ASCII fallback:
+
+```
+[kubectl / clients]
+          |
+          | HTTPS (6443)
+          v
+[Control Plane: API Server, Scheduler, Controller Manager]
+          |
+          | watches / assigns PodSpecs
+          v
+[Worker Node: kubelet] --> [container runtime] --> [Pods]
+
+kubelet watches the API server for pods scheduled to its node, runs containers through the node's container runtime, and reports status back to the API server.
+```
+
 ## Useful kubectl commands (quick cheat sheet)
 
 List and inspect objects:
@@ -113,9 +171,12 @@ Debugging / logs / exec:
 ```bash
 kubectl logs <pod-name>                 # logs of the first container
 kubectl logs -c <container-name> <pod>  # specific container
-kubectl exec -it <pod> -- /bin/sh      # run a shell in a pod
+kubectl exec -it <pod> -- /bin/sh      # run a shell in a pod -> linux access at pod level
 kubectl port-forward svc/my-svc 8080:80
 kubectl top pod                          # resource usage (requires metrics-server)
 kubectl get events --sort-by=.metadata.creationTimestamp
 ```
 
+```bash
+kubectl port-forward <pod> source:desination # basically localmachine:containePort forwards the request
+```

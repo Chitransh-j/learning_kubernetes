@@ -1,0 +1,28 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: demo-pod
+spec:
+  containers:
+    - name: sise
+      image: mhausenblas/simpleservice:0.5.0
+      ports: 
+      - containerPort : 9876
+      livenessProbe:
+       initialDelaySeconds: 2 #How much time we initially wait before starting probing  
+       periodSeconds: 5 # How often thereafter we probing
+       timeoutSeconds: 1 # How long we give the container to respond back
+       failureThreshold: 3 # how many consecutive failed responses needed to kill the container 
+       httpGet: 
+        path: /health
+        port: 9876
+
+      readinessProbe:
+       initialDelaySeconds: 2 #How much time we initially wait before starting probing  
+       periodSeconds: 5 # How often thereafter we probing
+       timeoutSeconds: 1 # How long we give the container to respond back
+       failureThreshold: 3 # how many consecutive failed responses needed to unready(move out the execution) the container 
+       httpGet: 
+        path: /health
+        port: 9876
+
