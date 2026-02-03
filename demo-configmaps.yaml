@@ -1,0 +1,28 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: demo-configmap-pod
+spec:
+  containers:
+    - name: nginx
+      image: nginx:1.14.2
+      volumeMounts:
+        - name: config-volume
+          mountPath: /randompath/heroes.txt
+          subPath: heroes.txt
+  volumes :
+    - name: config-volume
+      configMap:
+        name: demo-heroes 
+
+
+# how to create a configmap ?  kubectl create cm demo-heroes -from-file=./heroes.txt
+
+
+# kubectl exec -it demo-configmap-pod -- sh
+# ls -> you'd see a folder named randompath
+
+
+# but what if the folder is already present in the container image ? Then the files from configmap
+# will override the existing files in that path. So we need to be careful while choosing the mountPath and add a
+# subPath

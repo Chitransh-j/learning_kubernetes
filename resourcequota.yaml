@@ -6,3 +6,6 @@ spec:
   hard:
      cpu: "1"
      memory: 1Gi	
+
+     
+# resource quota can be granular and put up limit on specific resource types like requests and limits separately.
