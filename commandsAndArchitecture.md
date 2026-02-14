@@ -180,3 +180,62 @@ kubectl get events --sort-by=.metadata.creationTimestamp
 ```bash
 kubectl port-forward <pod> source:desination # basically localmachine:containePort forwards the request
 ```
+
+
+
+### Logging in K8s
+
+Logs in Kubernetes are Ephemeral (Volatile or transient). We therefore use external tools like grafana or similar for observability.
+
+```bash 
+kubectl logs <PodName> 
+kubectl logs <PodName> -c <ContainerName> # Granular at container level
+```
+
+#### Debugging at Pod level 
+Step 1️⃣ — Check Pod Status
+
+Step 2️⃣ — Describe the Pod
+
+Step 3️⃣ — Check Logs
+
+Step 4️⃣ — Exec Into Container (If Running)
+
+Step 5️⃣ — Check Events Cluster-Wide
+
+Step 6️⃣ — Check Node (Without SSH) 
+
+Step 7️⃣ — Network Debugging (If Needed)
+
+
+### Adding labels in k8s 
+Basically for grouping purpose for pods or any other resources. Kind of tagging stuff so we can identify things based on this tag (label) 
+
+```bash
+kubectl get pods --show-labels # List labels for pods
+```
+
+How to add a label to a resource ?
+
+Directly add to the pod manifest in the metadata key' value. <br/>
+Or,  
+
+```bash 
+kubectl label pod <podName> amazing=spiderman # this is the label (key,value) pair
+```
+
+How to overwrite it ?
+```bash 
+kubectl label pod <podName> amazing=wonderwoman --overwrite 
+```
+How to remove it ?
+ 
+```bash 
+kubectl label pod <podName> amazing- 
+```
+
+How to selectively get a pod based on labels ?
+```bash
+kubectl get pods --selector=cool=beans
+```
+
