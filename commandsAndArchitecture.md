@@ -181,7 +181,7 @@ kubectl get events --sort-by=.metadata.creationTimestamp
 kubectl port-forward <pod> source:desination # basically localmachine:containePort forwards the request
 ```
 
-
+---
 
 ### Logging in K8s
 
@@ -207,6 +207,7 @@ Step 6️⃣ — Check Node (Without SSH)
 
 Step 7️⃣ — Network Debugging (If Needed)
 
+---
 
 ### Adding labels in k8s 
 Basically for grouping purpose for pods or any other resources. Kind of tagging stuff so we can identify things based on this tag (label) 
@@ -217,7 +218,7 @@ kubectl get pods --show-labels # List labels for pods
 
 How to add a label to a resource ?
 
-Directly add to the pod manifest in the metadata key' value. <br/>
+Directly add to the pod manifest in the metadata key's value. <br/>
 Or,  
 
 ```bash 
