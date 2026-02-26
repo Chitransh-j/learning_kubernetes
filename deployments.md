@@ -6,4 +6,4 @@ Pods are rarely created out on their own in a prod environment. They are created
 
 - A K8s deployment resource is made in such a way that it EXPECT changes. Any other running resouce would decline change but a deployment handles them in an efficient manner.
 
-- A change in a deployment file leads to creation of a new replica set which is switched with the old one in a manner that we get ZERO downtime. 
+- A change in a deployment file (and its applying) leads to creation of a new replica set which is switched with the old one in a manner that we get ZERO downtime. 
