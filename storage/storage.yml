@@ -3,7 +3,7 @@ kind: PersistentVolume
 metadata:
  name: demo-pv
 spec:
- storageClassName: manual # This is the type of storage class we are using ( can be azure, aws, gcp, etc )
+ storageClassName: manual # Logical storage class name used to match with PVC (must match on both sides)
  capacity: 
   storage: 2Gi
  accessModes:
@@ -40,7 +40,7 @@ spec:
    volumeMounts:  # This is where we mount the volume to the container   
    - name: nginx-pv-storage
      mountPath: /data
- volumes:  # This is the description of the volume that is available to the node
+ volumes:  # Defines storage available to this Pod (can be mounted by its containers)
  - name: nginx-pv-storage
    persistentVolumeClaim:
     claimName: demo-pvc # This should match the name of the PVC we created above

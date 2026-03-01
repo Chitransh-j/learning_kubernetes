@@ -57,3 +57,38 @@ It still binds (PV ≥ PVC rule). PVC does NOT increase in size. The underlying 
 - The PVC gets mounted on the pod(s) as volume. The pod(s) can now access the persistent storage to store data.
 
 - A single PVC can be mounted to multiple pods.
+
+
+
+
+### Cloud Storage : 
+#### StorageClass 
+It defines how Kubernetes should create storage when a PVC requests storage.
+
+
+### What is CSI?
+- CSI = Container Storage Interface
+
+- It is a standard interface that allows Kubernetes to communicate with external storage systems (cloud disks, NFS, Ceph, etc.) 
+- It is not storage itself, not a disk.
+
+Think of it as: A translator between Kubernetes and real storage providers.
+
+
+#### Responsibility differentiation 
+A StorageClass defines how storage should be provisioned (which CSI driver to use, performance tier, reclaim policy, etc.), but it does not create anything on its own. When a PVC is created referencing that StorageClass, Kubernetes invokes the CSI driver, which is responsible for actually calling the cloud provider API, creating the disk, attaching it to the node, and mounting it. Kubernetes then creates a PV object representing that disk and binds it to the PVC. The Pod simply consumes the mounted storage and remains unaware of any cloud details.
+
+
+```
+PVC created
+    ↓
+StorageClass selected
+    ↓
+CSI driver provisions real storage
+    ↓
+PV auto-created
+    ↓
+PVC binds
+    ↓
+Pod mounts it
+```
