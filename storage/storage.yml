@@ -1,0 +1,46 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+ name: demo-pv
+spec:
+ storageClassName: manual # This is the type of storage class we are using ( can be azure, aws, gcp, etc )
+ capacity: 
+  storage: 2Gi
+ accessModes:
+  - ReadWriteOnce
+ hostPath:
+  path: /mnt/data # On the resource storage (wherever be it) the path where the persisted data goes 
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+ name: demo-pvc
+spec: 
+ storageClassName: manual # This should match the storage class name of the PV
+ accessModes:
+  - ReadWriteOnce
+ resources:
+  requests:
+   storage: 2Gi 
+
+--- 
+apiVersion: v1
+kind: Pod
+metadata: 
+ name: nginx-with-pvc
+spec:
+ containers:
+ - name: nginx
+   image: nginx 
+   ports: 
+   - name: http
+     containerPort: 80
+     protocol: TCP
+   volumeMounts:  # This is where we mount the volume to the container   
+   - name: nginx-pv-storage
+     mountPath: /data
+ volumes:  # This is the description of the volume that is available to the node
+ - name: nginx-pv-storage
+   persistentVolumeClaim:
+    claimName: demo-pvc # This should match the name of the PVC we created above
