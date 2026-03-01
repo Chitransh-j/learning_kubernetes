@@ -54,5 +54,6 @@ It still binds (PV ≥ PVC rule). PVC does NOT increase in size. The underlying 
 
 ---- 
 ### What do we gain with PV and PVC ?
-The PVC gets mounted on the pod(s) as volume. The pod(s) can now access the persistent storage to store data.
+- The PVC gets mounted on the pod(s) as volume. The pod(s) can now access the persistent storage to store data.
 
+- A single PVC can be mounted to multiple pods.
