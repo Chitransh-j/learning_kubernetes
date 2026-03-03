@@ -8,13 +8,19 @@ spec:
   matchLabels:  # All the pods with this label will be a part of this network policy.
    app: nginx 
  policyTypes:
- - Ingress # The incoming traffic to the pods with the above label will be controlled by this network policy.
- - Egress # The outgoing traffic from the pods with the above label will be controlled by this network policy.
+ - Ingress # The incoming traffic (all ; not only pod-level but any external traffic) to the pods with the above label will be controlled by this network policy.
+ - Egress # The outgoing traffic (all ; not only pod-level but any external traffic) from the pods with the above label will be controlled by this network policy.
  ingress:
  - from:
-   - podSelector:
+   - podSelector: # MUST be from these labelled pods
       matchLabels: 
        good: app # Only the pods with this label will be allowed to send traffic to the pods with the label app: nginx
+   - ipBlock:
+      cidr: 172.16.0.0/12  # or MUST be from this IP range
+   - namespaceSelector:
+      matchLabels:
+       project: my-project # or MUST be from these labelled namespaces
+
  egres:
   - to:
     - podSelector:

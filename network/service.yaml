@@ -7,6 +7,12 @@ spec:
   selector:
     app: nginx
   ports:
-    - port: 80
-      targetPort: 80
+    - port: 80. # This is the port on which the service will be exposed. The traffic coming to this port will be forwarded to the targetPort.
+      targetPort: 80 # This is the port on which the app running in the container is listening. The traffic coming to the service port will be forwarded to this port on the container.
+      protocol: TCP
+      #Can have multiple ports if the app is listening on multiple ports 
+    - port: 8080 # This is the port on which the service will be exposed. The traffic coming to this port will be forwarded to the targetPort.
+      targetPort: 80 # This is the port on which the app running in the container is listening. The traffic coming to the service port will be forwarded to this port on the container.
+      protocol: TCP
+    
   type: ClusterIP 
