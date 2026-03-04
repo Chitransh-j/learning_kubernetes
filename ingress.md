@@ -18,13 +18,13 @@ User
 Cloud Load Balancer (Public IP)
   │
   ▼
-Service (type: LoadBalancer)
+Service (type: LoadBalancer/ Nodeport)
   │
   ▼
 NGINX Ingress Controller Pods
   │
   ▼
-Ingress Rules
+Ingress Rules (type: Ingress)
   │
   ▼
 Service (ClusterIP)
